@@ -3,11 +3,32 @@
    ============================================= */
 
 const state = {
-  currentScene: 'unlock',
+  currentScene: 'countdown',
   musicPlaying: false,
   messageIndex: 0,
   unlocked: false,
 };
+
+const countdownMessages = [
+  "Some moments are worth waiting for.",
+  "Patience, my love.",
+  "A little longer, pretty girl.",
+  "Your surprise is waiting for midnight.",
+  "The best part is coming.",
+  "Almost time, baby.",
+  "Not yet… but soon.",
+  "This story begins on May 26.",
+  "You're getting closer ❤️",
+  "The universe is preparing something beautiful for you."
+];
+
+const passwordWrongMessages = [
+  "That's not it, baby 🤍",
+  "Almost, my love.",
+  "Try again, pretty girl.",
+  "You're cute when you try.",
+  "Closer ❤️"
+];
 
 const messages = [
   "Happy Birthday to the girl who changed my life without even trying.",
@@ -57,12 +78,14 @@ const mediaFiles = [
 // DOM REFS
 // ============================================
 const bgMusic       = document.getElementById('bgMusic');
+const countdownMusic= document.getElementById('countdownMusic');
 const musicControl  = document.getElementById('musicControl');
 const musicIcon     = document.getElementById('musicIcon');
 const starsCanvas   = document.getElementById('starsCanvas');
 const confettiCanvas= document.getElementById('confettiCanvas');
 const petalCanvas   = document.getElementById('petalCanvas');
 const cursorCanvas  = document.getElementById('cursorCanvas');
+const sceneCountdown= document.getElementById('scene-countdown');
 const sceneUnlock   = document.getElementById('scene-unlock');
 const sceneBirthday = document.getElementById('scene-birthday');
 const sceneEnding   = document.getElementById('scene-ending');
@@ -78,6 +101,16 @@ const endingText    = document.getElementById('endingText');
 const galleryBtn    = document.getElementById('galleryBtn');
 const featuredFrames = document.getElementById('featuredFrames');
 const remainingGallery = document.getElementById('remainingGallery');
+
+// Countdown DOM
+const countdownTimer   = document.getElementById('countdownTimer');
+const countdownMessage = document.getElementById('countdownMessage');
+const openSoonerBtn    = document.getElementById('openSoonerBtn');
+const passwordModal    = document.getElementById('passwordModal');
+const passwordInput    = document.getElementById('passwordInput');
+const passwordSubmit   = document.getElementById('passwordSubmit');
+const passwordError    = document.getElementById('passwordError');
+const closeModalBtn    = document.getElementById('closeModalBtn');
 
 // ============================================
 // GLOBAL STARS — twinkling bright/dim
@@ -521,7 +554,7 @@ function triggerUnlock() {
 // SCENE TRANSITIONS
 // ============================================
 function transitionToScene(sceneName) {
-  const scenes = { unlock:sceneUnlock, birthday:sceneBirthday, ending:sceneEnding, gallery:sceneGallery };
+  const scenes = { countdown:sceneCountdown, unlock:sceneUnlock, birthday:sceneBirthday, ending:sceneEnding, gallery:sceneGallery };
   Object.values(scenes).forEach(el => { el.classList.remove('active'); el.style.pointerEvents='none'; });
   setTimeout(() => {
     const t = scenes[sceneName];
@@ -781,25 +814,170 @@ function startParticles(containerId) {
 }
 
 // ============================================
+// COUNTDOWN
+// ============================================
+let countdownInterval;
+let messageInterval;
+
+function initCountdown() {
+  startParticles('countdownParticles');
+
+  // Rotate messages
+  let msgIdx = 0;
+  countdownMessage.textContent = countdownMessages[msgIdx];
+  countdownMessage.classList.add('visible');
+
+  messageInterval = setInterval(() => {
+    countdownMessage.classList.remove('visible');
+    setTimeout(() => {
+      msgIdx = (msgIdx + 1) % countdownMessages.length;
+      countdownMessage.textContent = countdownMessages[msgIdx];
+      countdownMessage.classList.add('visible');
+    }, 2000);
+  }, 6000);
+
+  // Target time: May 26, 2026 00:00:00 Algeria Time (UTC+1)
+  // Which is May 25, 2026 23:00:00 UTC
+  const targetDate = new Date(Date.UTC(2026, 4, 25, 23, 0, 0)).getTime();
+
+  function updateTimer() {
+    const now = new Date().getTime();
+    const distance = targetDate - now;
+
+    if (distance <= 0) {
+      clearInterval(countdownInterval);
+      countdownTimer.textContent = "00 DAYS : 00 HOURS : 00 MINUTES : 00 SECONDS";
+      unlockFromCountdown();
+      return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    const pad = (n) => n.toString().padStart(2, '0');
+    countdownTimer.textContent = `${pad(days)} DAYS : ${pad(hours)} HOURS : ${pad(minutes)} MINUTES : ${pad(seconds)} SECONDS`;
+  }
+
+  updateTimer();
+  countdownInterval = setInterval(updateTimer, 1000);
+
+  // Modal logic
+  openSoonerBtn.addEventListener('click', () => {
+    passwordModal.classList.add('show');
+    passwordInput.focus();
+  });
+
+  closeModalBtn.addEventListener('click', () => {
+    passwordModal.classList.remove('show');
+    passwordError.textContent = '';
+    passwordInput.value = '';
+  });
+
+  passwordSubmit.addEventListener('click', checkPassword);
+  passwordInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') checkPassword();
+  });
+
+  function checkPassword() {
+    const val = passwordInput.value.replace(/\s+/g, '').toLowerCase();
+    if (val === 'iloveyoutothemoonandback,mywife') {
+      passwordError.style.color = '#fff';
+      passwordError.textContent = "Correct, my love ✨";
+      setTimeout(() => {
+        passwordModal.classList.remove('show');
+        unlockFromCountdown();
+      }, 1000);
+    } else {
+      passwordError.style.color = 'var(--pink-deep)';
+      passwordError.textContent = passwordWrongMessages[Math.floor(Math.random() * passwordWrongMessages.length)];
+    }
+  }
+}
+
+function unlockFromCountdown() {
+  clearInterval(countdownInterval);
+  clearInterval(messageInterval);
+  state.unlocked = true;
+
+  // Visual Transition
+  unlockOverlay.classList.add('phase1'); // Add soft glow/flash
+  
+  // Crossfade music
+  if (state.musicPlaying) {
+    let vol = 0.4;
+    const fadeOut = setInterval(() => {
+      vol -= 0.05;
+      if (vol <= 0) {
+        clearInterval(fadeOut);
+        countdownMusic.pause();
+        bgMusic.volume = 0;
+        bgMusic.play();
+        let inVol = 0;
+        const fadeIn = setInterval(() => {
+          inVol += 0.05;
+          if (inVol >= 0.4) {
+            clearInterval(fadeIn);
+            bgMusic.volume = 0.4;
+          } else {
+            bgMusic.volume = inVol;
+          }
+        }, 150);
+      } else {
+        countdownMusic.volume = Math.max(0, vol);
+      }
+    }, 150);
+  } else {
+    // If not playing, just switch
+    startMusic();
+  }
+
+  setTimeout(() => {
+    unlockOverlay.classList.remove('phase1');
+    unlockOverlay.classList.add('phase2'); // black screen
+  }, 1500);
+
+  setTimeout(() => {
+    sceneCountdown.classList.remove('active');
+    sceneCountdown.style.pointerEvents = 'none';
+    
+    sceneUnlock.classList.add('active');
+    sceneUnlock.style.pointerEvents = 'all';
+    state.currentScene = 'unlock';
+    
+    // Fade into unlock scene
+    unlockOverlay.classList.remove('phase2');
+    unlockOverlay.classList.add('phase3');
+    setTimeout(() => {
+      unlockOverlay.classList.remove('phase3');
+      state.unlocked = false; // Reset unlock state for the key drag puzzle
+    }, 1500);
+  }, 2500);
+}
+
+// ============================================
 // MUSIC
 // ============================================
 function startMusic() {
-  bgMusic.volume = 0.4;
-  bgMusic.play().then(() => {
+  const targetMusic = state.currentScene === 'countdown' ? countdownMusic : bgMusic;
+  targetMusic.volume = 0.4;
+  targetMusic.play().then(() => {
     state.musicPlaying = true;
     musicIcon.textContent = '🎵';
   }).catch(() => {
     document.addEventListener('click', () => {
-      bgMusic.play().then(() => { state.musicPlaying=true; musicIcon.textContent='🎵'; });
+      targetMusic.play().then(() => { state.musicPlaying=true; musicIcon.textContent='🎵'; });
     }, { once: true });
   });
 }
 
 function toggleMusic() {
+  const currentMusic = state.currentScene === 'countdown' ? countdownMusic : bgMusic;
   if (state.musicPlaying) {
-    bgMusic.pause(); state.musicPlaying=false; musicIcon.textContent='🔇';
+    currentMusic.pause(); state.musicPlaying=false; musicIcon.textContent='🔇';
   } else {
-    bgMusic.play(); state.musicPlaying=true; musicIcon.textContent='🎵';
+    currentMusic.play(); state.musicPlaying=true; musicIcon.textContent='🎵';
   }
 }
 
@@ -821,17 +999,15 @@ function init() {
   initStars();
   initConfetti();
   initDragUnlock();
+  initCountdown();
   drawCursor();
   startFloatingHearts('floatingHeartsBg');
 
-  bgMusic.volume = 0.4;
-  bgMusic.play().then(() => {
-    state.musicPlaying = true;
-    musicIcon.textContent = '🎵';
-  }).catch(() => {});
+  // Attempt to start music
+  startMusic();
 
-  sceneUnlock.classList.add('active');
-  sceneUnlock.style.pointerEvents='all';
+  sceneCountdown.classList.add('active');
+  sceneCountdown.style.pointerEvents='all';
 }
 
 window.addEventListener('DOMContentLoaded', init);

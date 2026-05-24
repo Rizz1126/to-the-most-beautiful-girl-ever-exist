@@ -20,6 +20,9 @@
   <audio id="bgMusic" loop>
     <source src="keshi - Soft Spot (Lyrics).mp3" type="audio/mpeg" />
   </audio>
+  <audio id="countdownMusic" loop>
+    <source src="keshi - Soft Spot (Instrumental).mp3" type="audio/mpeg" />
+  </audio>
 
   <!-- ========== MUSIC CONTROL ========== -->
   <div id="musicControl" class="music-btn">
@@ -31,8 +34,39 @@
   <!-- ========== CURSOR HEARTS ========== -->
   <canvas id="cursorCanvas"></canvas>
 
+  <!-- ========== SCENE 0: COUNTDOWN ========== -->
+  <section id="scene-countdown" class="scene active">
+    <!-- Background Effects -->
+    <div class="countdown-bg"></div>
+    <div class="countdown-particles" id="countdownParticles"></div>
+    <div class="countdown-fog"></div>
+    
+    <div class="countdown-container">
+      <div class="countdown-msg-wrapper">
+        <p id="countdownMessage" class="countdown-message"></p>
+      </div>
+      <div id="countdownTimer" class="countdown-timer">
+        00 DAYS : 00 HOURS : 00 MINUTES : 00 SECONDS
+      </div>
+      <div class="open-sooner-wrapper">
+        <button id="openSoonerBtn" class="open-sooner-btn">Open sooner?</button>
+      </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="passwordModal" class="password-modal">
+      <div class="password-modal-content">
+        <p class="password-prompt">Enter the magic word, love.</p>
+        <input type="password" id="passwordInput" class="password-input" placeholder="..." />
+        <button id="passwordSubmit" class="password-submit">Unlock</button>
+        <p id="passwordError" class="password-error"></p>
+        <button id="closeModalBtn" class="close-modal-btn">Cancel</button>
+      </div>
+    </div>
+  </section>
+
   <!-- ========== SCENE 1: UNLOCK MY HEART ========== -->
-  <section id="scene-unlock" class="scene active">
+  <section id="scene-unlock" class="scene">
     <div class="floating-hearts-bg" id="floatingHeartsBg"></div>
 
     <div class="unlock-container">
