@@ -106,15 +106,20 @@ function initStars() {
 
   const gx = starsCanvas.width * 0.78, gy = starsCanvas.height * 0.18;
   const geminiStars = [
-    {x: gx - 15, y: gy - 30}, // 0: Castor
-    {x: gx + 15, y: gy - 25}, // 1: Pollux
-    {x: gx - 20, y: gy - 5},  // 2: Castor body
-    {x: gx + 10, y: gy},      // 3: Pollux body
-    {x: gx - 25, y: gy + 20}, // 4: Castor knee
-    {x: gx + 5, y: gy + 25},  // 5: Pollux knee
-    {x: gx - 35, y: gy + 40}, // 6: Castor foot
-    {x: gx - 10, y: gy + 45}, // 7: Pollux foot
-    {x: gx - 5, y: gy - 2}    // 8: Arm connection
+    {x: gx - 30, y: gy - 25}, // 0: Pollux Head
+    {x: gx + 10, y: gy - 35}, // 1: Castor Head
+    {x: gx - 20, y: gy},      // 2: Pollux Neck
+    {x: gx + 20, y: gy},      // 3: Castor Neck
+    {x: gx - 50, y: gy + 10}, // 4: Pollux Arm
+    {x: gx + 50, y: gy - 30}, // 5: Castor Arm
+    {x: gx - 20, y: gy + 30}, // 6: Pollux Waist
+    {x: gx + 20, y: gy + 30}, // 7: Castor Waist
+    {x: gx - 20, y: gy + 55}, // 8: Pollux Knee
+    {x: gx - 5,  y: gy + 80}, // 9: Pollux Foot
+    {x: gx - 10, y: gy + 60}, // 10: Inner Foot (from Castor Waist)
+    {x: gx + 40, y: gy + 50}, // 11: Castor Knee
+    {x: gx + 60, y: gy + 70}, // 12: Castor Foot
+    {x: gx + 70, y: gy + 45}  // 13: Castor Outer
   ];
   geminiStars.forEach(s => {
     starsData.push({
@@ -132,13 +137,26 @@ function initStars() {
     ctx.strokeStyle = 'rgba(255,200,240,0.15)';
     ctx.lineWidth = 0.8;
     const g = starsData.filter(s => s.gemini);
-    if (g.length >= 9) {
-      // Castor
-      ctx.beginPath(); ctx.moveTo(g[0].x, g[0].y); ctx.lineTo(g[2].x, g[2].y); ctx.lineTo(g[4].x, g[4].y); ctx.lineTo(g[6].x, g[6].y); ctx.stroke();
-      // Pollux
-      ctx.beginPath(); ctx.moveTo(g[1].x, g[1].y); ctx.lineTo(g[3].x, g[3].y); ctx.lineTo(g[5].x, g[5].y); ctx.lineTo(g[7].x, g[7].y); ctx.stroke();
-      // Arms connecting them
-      ctx.beginPath(); ctx.moveTo(g[2].x, g[2].y); ctx.lineTo(g[8].x, g[8].y); ctx.lineTo(g[3].x, g[3].y); ctx.stroke();
+    if (g.length >= 14) {
+      ctx.beginPath();
+      // Pollux upper
+      ctx.moveTo(g[0].x, g[0].y); ctx.lineTo(g[2].x, g[2].y);
+      ctx.lineTo(g[4].x, g[4].y);
+      // Castor upper
+      ctx.moveTo(g[1].x, g[1].y); ctx.lineTo(g[3].x, g[3].y);
+      ctx.lineTo(g[5].x, g[5].y);
+      // Twin connection
+      ctx.moveTo(g[2].x, g[2].y); ctx.lineTo(g[3].x, g[3].y);
+      // Pollux body & leg
+      ctx.moveTo(g[2].x, g[2].y); ctx.lineTo(g[6].x, g[6].y);
+      ctx.lineTo(g[8].x, g[8].y); ctx.lineTo(g[9].x, g[9].y);
+      // Castor body & legs
+      ctx.moveTo(g[3].x, g[3].y); ctx.lineTo(g[7].x, g[7].y);
+      ctx.lineTo(g[10].x, g[10].y); // Inner foot
+      ctx.moveTo(g[7].x, g[7].y); ctx.lineTo(g[11].x, g[11].y);
+      ctx.lineTo(g[12].x, g[12].y); // Castor foot
+      ctx.moveTo(g[11].x, g[11].y); ctx.lineTo(g[13].x, g[13].y); // Castor outer
+      ctx.stroke();
     }
     ctx.restore();
 
