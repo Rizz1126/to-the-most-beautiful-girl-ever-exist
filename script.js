@@ -106,9 +106,15 @@ function initStars() {
 
   const gx = starsCanvas.width * 0.78, gy = starsCanvas.height * 0.18;
   const geminiStars = [
-    {x:gx, y:gy}, {x:gx+20, y:gy+30}, {x:gx-20, y:gy+30},
-    {x:gx+20, y:gy+60}, {x:gx-20, y:gy+60},
-    {x:gx+15, y:gy+90}, {x:gx-15, y:gy+90},
+    {x: gx - 15, y: gy - 30}, // 0: Castor
+    {x: gx + 15, y: gy - 25}, // 1: Pollux
+    {x: gx - 20, y: gy - 5},  // 2: Castor body
+    {x: gx + 10, y: gy},      // 3: Pollux body
+    {x: gx - 25, y: gy + 20}, // 4: Castor knee
+    {x: gx + 5, y: gy + 25},  // 5: Pollux knee
+    {x: gx - 35, y: gy + 40}, // 6: Castor foot
+    {x: gx - 10, y: gy + 45}, // 7: Pollux foot
+    {x: gx - 5, y: gy - 2}    // 8: Arm connection
   ];
   geminiStars.forEach(s => {
     starsData.push({
@@ -126,10 +132,13 @@ function initStars() {
     ctx.strokeStyle = 'rgba(255,200,240,0.15)';
     ctx.lineWidth = 0.8;
     const g = starsData.filter(s => s.gemini);
-    if (g.length >= 7) {
+    if (g.length >= 9) {
+      // Castor
       ctx.beginPath(); ctx.moveTo(g[0].x, g[0].y); ctx.lineTo(g[2].x, g[2].y); ctx.lineTo(g[4].x, g[4].y); ctx.lineTo(g[6].x, g[6].y); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(g[0].x, g[0].y); ctx.lineTo(g[1].x, g[1].y); ctx.lineTo(g[3].x, g[3].y); ctx.lineTo(g[5].x, g[5].y); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(g[1].x, g[1].y); ctx.lineTo(g[2].x, g[2].y); ctx.stroke();
+      // Pollux
+      ctx.beginPath(); ctx.moveTo(g[1].x, g[1].y); ctx.lineTo(g[3].x, g[3].y); ctx.lineTo(g[5].x, g[5].y); ctx.lineTo(g[7].x, g[7].y); ctx.stroke();
+      // Arms connecting them
+      ctx.beginPath(); ctx.moveTo(g[2].x, g[2].y); ctx.lineTo(g[8].x, g[8].y); ctx.lineTo(g[3].x, g[3].y); ctx.stroke();
     }
     ctx.restore();
 
