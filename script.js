@@ -713,12 +713,16 @@ function buildFeaturedFrames() {
   const photos = mediaFiles.filter(m => m.type === 'image');
   const videos = mediaFiles.filter(m => m.type === 'video');
 
+  // Find the specific photos requested for the featured polaroid frames
+  const photoLeft = mediaFiles.find(m => m.caption && m.caption.toLowerCase().includes('born to light up this world')) || photos[0];
+  const photoRight = mediaFiles.find(m => m.caption && m.caption.toLowerCase().includes('favorite person')) || photos[1];
+
   // [photo(tall), video(short), video(short), photo(tall)]
   const featured = [
-    { ...photos[0], layout: 'tall' },
+    { ...photoLeft, layout: 'tall' },
     { ...videos[0], layout: 'short' },
     { ...videos[1], layout: 'short' },
-    { ...photos[1], layout: 'tall' },
+    { ...photoRight, layout: 'tall' },
   ];
 
   const ornamentEmojis = ['🎀','⭐','💫','🌸'];
