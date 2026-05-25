@@ -63,7 +63,7 @@ const finalMessage = `You are one of the best things that has ever happened to m
 // All media files — new.mp4 replaces bottom center video
 const mediaFiles = [
   { src: "photos/WhatsApp Image 2026-05-23 at 10.49.46 PM.jpeg",     type: "image", caption: "That beautiful smile 💕" },
-  { src: "photos/WhatsApp Image 2026-05-23 at 10.49.46 PM (2).jpeg", type: "image", caption: "The most extraordinary soul ✨" },
+  { src: "photos/WhatsApp Image 2026-05-23 at 10.49.46 PM (2).jpeg", type: "image", caption: "Extraordinary soul ✨" },
   { src: "photos/WhatsApp Image 2026-05-23 at 10.49.46 PM (4).jpeg", type: "image", caption: "Born to light up this world 🌸" },
   { src: "photos/WhatsApp Image 2026-05-23 at 11.02.58 PM.jpeg",     type: "image", caption: "My favorite person ❤️" },
   { src: "photos/WhatsApp Image 2026-05-23 at 11.02.58 PM (1).jpeg", type: "image", caption: "Simply stunning 💖" },
