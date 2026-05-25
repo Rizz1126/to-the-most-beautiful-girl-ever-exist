@@ -930,32 +930,7 @@ function unlockFromCountdown() {
   // Visual Transition
   unlockOverlay.classList.add('phase1'); // Add soft glow/flash
   
-  // Crossfade music
-  if (state.musicPlaying) {
-    let vol = 0.4;
-    const fadeOut = setInterval(() => {
-      vol -= 0.05;
-      if (vol <= 0) {
-        clearInterval(fadeOut);
-        countdownMusic.pause();
-        bgMusic.volume = 0;
-        bgMusic.play();
-        let inVol = 0;
-        const fadeIn = setInterval(() => {
-          inVol += 0.05;
-          if (inVol >= 0.4) {
-            clearInterval(fadeIn);
-            bgMusic.volume = 0.4;
-          } else {
-            bgMusic.volume = inVol;
-          }
-        }, 150);
-      } else {
-        countdownMusic.volume = Math.max(0, vol);
-      }
-    }, 150);
-  } else {
-    // If not playing, just switch
+  if (!state.musicPlaying) {
     startMusic();
   }
 
@@ -986,7 +961,7 @@ function unlockFromCountdown() {
 // MUSIC
 // ============================================
 function startMusic() {
-  const targetMusic = state.currentScene === 'countdown' ? countdownMusic : bgMusic;
+  const targetMusic = bgMusic;
   targetMusic.volume = 0.4;
   targetMusic.play().then(() => {
     state.musicPlaying = true;
@@ -999,7 +974,7 @@ function startMusic() {
 }
 
 function toggleMusic() {
-  const currentMusic = state.currentScene === 'countdown' ? countdownMusic : bgMusic;
+  const currentMusic = bgMusic;
   if (state.musicPlaying) {
     currentMusic.pause(); state.musicPlaying=false; musicIcon.textContent='🔇';
   } else {
