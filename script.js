@@ -106,6 +106,9 @@ const remainingGallery = document.getElementById('remainingGallery');
 const countdownTimer   = document.getElementById('countdownTimer');
 const countdownMessage = document.getElementById('countdownMessage');
 const openSoonerBtn    = document.getElementById('openSoonerBtn');
+const openSoonerWrapper= document.getElementById('openSoonerWrapper');
+const enterBtnWrapper  = document.getElementById('enterBtnWrapper');
+const enterBtn         = document.getElementById('enterBtn');
 const passwordModal    = document.getElementById('passwordModal');
 const passwordInput    = document.getElementById('passwordInput');
 const passwordSubmit   = document.getElementById('passwordSubmit');
@@ -846,8 +849,24 @@ function initCountdown() {
 
     if (distance <= 0) {
       clearInterval(countdownInterval);
+      clearInterval(messageInterval);
       countdownTimer.textContent = "00 DAYS : 00 HOURS : 00 MINUTES : 00 SECONDS";
-      unlockFromCountdown();
+      
+      if (openSoonerWrapper) {
+        openSoonerWrapper.style.display = 'none';
+      }
+
+      countdownMessage.classList.remove('visible');
+      setTimeout(() => {
+        countdownMessage.textContent = "Happy Birthday, my love! ❤️";
+        countdownMessage.classList.add('visible');
+      }, 1000);
+
+      if (enterBtnWrapper) {
+        enterBtnWrapper.style.display = 'block';
+        enterBtnWrapper.offsetHeight; // trigger reflow
+        enterBtnWrapper.classList.add('show');
+      }
       return;
     }
 
@@ -862,6 +881,13 @@ function initCountdown() {
 
   updateTimer();
   countdownInterval = setInterval(updateTimer, 1000);
+
+  // Enter button logic
+  if (enterBtn) {
+    enterBtn.addEventListener('click', () => {
+      unlockFromCountdown();
+    });
+  }
 
   // Modal logic
   openSoonerBtn.addEventListener('click', () => {

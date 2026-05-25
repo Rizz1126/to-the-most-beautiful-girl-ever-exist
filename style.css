@@ -866,6 +866,59 @@ body {
   margin-bottom: 50px;
 }
 
+.enter-btn-wrapper {
+  margin-bottom: 40px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1.5s ease, transform 1.5s ease;
+  z-index: 6;
+}
+.enter-btn-wrapper.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.enter-btn {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.95rem, 2.5vw, 1.25rem);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, rgba(255, 182, 209, 0.15), rgba(201, 131, 106, 0.22));
+  border: 1.5px solid rgba(255, 182, 209, 0.45);
+  border-radius: 50px;
+  padding: 18px 52px;
+  color: var(--pink-light);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(255, 120, 170, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  outline: none;
+  animation: enterBtnPulse 2.5s infinite alternate ease-in-out;
+}
+
+.enter-btn:hover {
+  background: linear-gradient(135deg, rgba(255, 182, 209, 0.35), rgba(201, 131, 106, 0.4));
+  border-color: rgba(255, 182, 209, 0.85);
+  box-shadow: 0 0 35px rgba(255, 120, 170, 0.65), 0 0 15px rgba(255, 255, 255, 0.25);
+  transform: translateY(-4px) scale(1.03);
+  color: #fff;
+}
+
+.enter-btn:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+@keyframes enterBtnPulse {
+  0% {
+    box-shadow: 0 8px 32px rgba(255, 120, 170, 0.15), 0 0 0 0 rgba(255, 182, 209, 0);
+  }
+  100% {
+    box-shadow: 0 8px 32px rgba(255, 120, 170, 0.25), 0 0 18px 6px rgba(255, 182, 209, 0.3);
+  }
+}
+
 .open-sooner-wrapper {
   position: absolute; bottom: 40px;
 }
